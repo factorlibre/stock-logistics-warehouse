@@ -60,6 +60,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: stock_reserve
+#: field:stock.picking.type,is_reserve_default_type:0
+msgid "Is Reserve default type?"
+msgstr "Tipo de operación para las reservas (p.def)?"
+
+#. module: stock_reserve
 #: field:stock.reservation,write_uid:0
 msgid "Last Updated by"
 msgstr "Actualizado por última vez por"

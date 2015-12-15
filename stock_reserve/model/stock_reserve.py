@@ -24,6 +24,12 @@ from openerp.exceptions import except_orm
 from openerp.tools.translate import _
 
 
+class StockPickingType(models.Model):
+    _inherit = 'stock.picking.type'
+
+    is_reserve_default_type = fields.Boolean('Is Reserve default type?')
+
+
 class StockReservation(models.Model):
     """ Allow to reserve products.
 
@@ -90,7 +96,9 @@ class StockReservation(models.Model):
         """
         type_obj = self.env['stock.picking.type']
 
-        types = type_obj.search([('code', '=', 'internal')], limit=1)
+        types = type_obj.search(
+            [('code', '=', 'internal')],
+            order='is_reserve_default_type desc', limit=1)
         if types:
             return types[0].id
         return False
@@ -105,8 +113,11 @@ class StockReservation(models.Model):
 
     @api.model
     def _default_location_dest_id(self):
-        ref = 'stock_reserve.stock_location_reservation'
-        return self.get_location_from_ref(ref)
+        move_obj = self.env['stock.move']
+        picking_type_id = self._default_picking_type_id()
+        return (move_obj
+                .with_context(default_picking_type_id=picking_type_id)
+                ._default_location_destination())
 
     _defaults = {
         'picking_type_id': _default_picking_type_id,
