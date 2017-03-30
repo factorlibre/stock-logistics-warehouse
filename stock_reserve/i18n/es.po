@@ -151,11 +151,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: stock_reserve
-
 #: field:stock.picking.type,is_reserve_default_type:0
 msgid "Is Reserve default type?"
 msgstr "Tipo de operación para las reservas (p.def)?"
 
+#. module: stock_reserve
 #: help:stock.reservation,propagate:0
 msgid "If checked, when this move is cancelled, cancel the linked move too"
 msgstr ""
