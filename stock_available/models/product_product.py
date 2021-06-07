@@ -44,11 +44,12 @@ class ProductProduct(models.Model):
     @api.multi
     @api.depends('virtual_available')
     def _compute_available_quantities(self):
-        res, _ = self._compute_available_quantities_dict()
-        for product in self:
-            for key, value in res[product.id].items():
-                if hasattr(product, key):
-                    product[key] = value
+        if self.ids:
+            res, _ = self._compute_available_quantities_dict()
+            for product in self:
+                for key, value in res[product.id].items():
+                    if hasattr(product, key):
+                        product[key] = value
 
     immediately_usable_qty = fields.Float(
         digits=dp.get_precision('Product Unit of Measure'),
