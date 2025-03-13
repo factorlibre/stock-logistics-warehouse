@@ -64,12 +64,13 @@ def post_load_hook():
             self.env["stock.move"].with_context(inventory_mode=False).create(move_vals)
         )
         moves._action_done()
-        self.location_id.write({"last_inventory_date": fields.Date.today()})
-        date_by_location = {
-            loc: loc._get_next_inventory_date() for loc in self.mapped("location_id")
-        }
-        for quant in self:
-            quant.inventory_date = date_by_location[quant.location_id]
+        if not self.env.context.get("skip_location_inventory_date"):
+            self.location_id.write({"last_inventory_date": fields.Date.today()})
+            date_by_location = {
+                loc: loc._get_next_inventory_date() for loc in self.mapped("location_id")
+            }
+            for quant in self:
+                quant.inventory_date = date_by_location[quant.location_id]
         self.write({"inventory_quantity": 0, "user_id": False})
         self.write({"inventory_diff_quantity": 0})
 
